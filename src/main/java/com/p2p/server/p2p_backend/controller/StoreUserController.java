@@ -1,4 +1,4 @@
 package com.p2p.server.p2p_backend.controller;
 
-public class StoreController {
+public class StoreUserController {
 }

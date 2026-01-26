@@ -27,6 +27,9 @@ public class UserRepository {
 
         User user = doc.toObject(User.class);
 
+        // In case we lose it
+        user.setId(userId);
+
         System.out.println("---- USER ----");
         System.out.println("Name: " + user.getFirstName() + " " + user.getLastName());
 
