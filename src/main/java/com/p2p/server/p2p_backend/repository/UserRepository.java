@@ -22,7 +22,7 @@ public class UserRepository {
 
         if (!doc.exists()) {
             System.out.println("User not found: " + userId);
-            return;
+            return null;
         }
 
         User user = doc.toObject(User.class);
