@@ -1,24 +1,18 @@
 package com.p2p.server.p2p_backend.model;
 
 import java.util.List;
-import java.time.*;
 
-@Entity
-public class User {
-
-    @Id
+public class StoreUser {
     private String id;
 
     private String firstName;
     private String lastName;
     private String email;
-    private String city;
-    private String state;
-    private String zip;
     private String createdAt;
-    private List<String> interests;
+    private String phone;
+    private String website;
 
-    public User() {}
+    public StoreUser() {}
 
     // id
     public String getId() {
@@ -56,33 +50,6 @@ public class User {
         this.email = email;
     }
 
-    // city
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    // state
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    // zip
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
     // createdAt
     public String getCreatedAt() {
         return createdAt;
@@ -92,12 +59,21 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // interests
-    public List<String> getInterests() {
-        return interests;
+    // website
+    public String getWebsite() {
+        return website;
     }
 
-    public void setInterests(List<String> interests) {
-        this.interests = interests;
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    // phone
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
