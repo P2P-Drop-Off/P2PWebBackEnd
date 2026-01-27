@@ -2,9 +2,10 @@ package com.p2p.server.p2p_backend.repository;
 
 import com.p2p.server.p2p_backend.model.Item;
 import com.google.cloud.firestore.*;
-import com.p2p.server.p2p_backend.model.User;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public class ItemRepository {
     private final Firestore firestore;
     public ItemRepository(Firestore firestore) {

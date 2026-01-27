@@ -19,7 +19,7 @@ public class LocationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Location> getItem(@PathVariable String id) throws Exception {
+    public ResponseEntity<Location> getLocation(@PathVariable String id) throws Exception {
         Location location = repository.getLocation(id);
 
         if (location == null) {

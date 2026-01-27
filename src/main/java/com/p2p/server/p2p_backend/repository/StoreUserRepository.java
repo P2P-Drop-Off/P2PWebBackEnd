@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import com.p2p.server.p2p_backend.model.User;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public class StoreUserRepository {
 
     private final Firestore firestore;
