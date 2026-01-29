@@ -14,26 +14,36 @@ public class StoreUserRepository {
         this.firestore = firestore;
     }
 
-    // READ
-    public StoreUser getStoreUser(String userId) throws Exception{
+    public StoreUser getStoreUser(String userId) throws Exception {
+        try {
+            DocumentSnapshot doc = firestore
+                    .collection("storeUsers")
+                    .document(userId)
+                    .get()
+                    .get();
 
-        DocumentSnapshot doc = firestore
-                .collection("storeUsers")
-                .document(userId)
-                .get()
-                .get();
+            if (!doc.exists()) {
+                System.out.println("StoreUser not found: " + userId);
+                return null;
+            }
 
-        if (!doc.exists()) {
-            System.out.println("StoreUser not found: " + userId);
-            return null;
+            StoreUser user = doc.toObject(StoreUser.class);
+            if (user == null) {
+                throw new IllegalAccessException("Failed to map StoreUser: " + userId);
+            }
+
+            return user;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong while fetching StoreUser " + userId, e);
         }
+    }
 
-        User user = doc.toObject(User.class);
-
-        System.out.println("---- Got StoreUser ----");
-        System.out.println("Name: " + user.getFirstName() + " " + user.getLastName());
-
-        return doc.toObject(StoreUser.class);
-
+    // DELETE
+    public void deleteStoreUser(String storeUserId) throws Exception{
+        try {
+            firestore.collection("storeUsers").document(storeUserId).delete();
+        } catch (Exception e) {
+            throw new Exception("Failed to delete storeUser with id: " + storeUserId, e);
+        }
     }
 }

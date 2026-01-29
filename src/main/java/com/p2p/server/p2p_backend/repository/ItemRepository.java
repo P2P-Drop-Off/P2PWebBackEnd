@@ -14,24 +14,36 @@ public class ItemRepository {
 
     // READ
     public Item getItem(String itemId) throws Exception{
+        try {
+            DocumentSnapshot doc = firestore
+                    .collection("items")
+                    .document(itemId)
+                    .get()
+                    .get();
 
-        DocumentSnapshot doc = firestore
-                .collection("items")
-                .document(itemId)
-                .get()
-                .get();
+            if (!doc.exists()) {
+                System.out.println("Item not found: " + itemId);
+                return null;
+            }
 
-        if (!doc.exists()) {
-            System.out.println("Item not found: " + itemId);
-            return null;
+            Item item = doc.toObject(Item.class);
+            if (item == null) {
+                throw new IllegalAccessException("Failed to map Item: " + itemId);
+            }
+
+            return item;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong while fetching item " + itemId, e);
+
         }
+    }
 
-        Item item = doc.toObject(Item.class);
-
-        System.out.println("---- Got Item ----");
-        System.out.println("Name: " + item.getName() + " " + item.getDescription());
-
-        return doc.toObject(Item.class);
-
+    // DELETE
+    public void deleteItem(String itemId) throws Exception{
+        try {
+            firestore.collection("items").document(itemId).delete();
+        } catch (Exception e) {
+            throw new Exception("Failed to delete item with id: " + itemId, e);
+        }
     }
 }

@@ -11,26 +11,36 @@ public class UserRepository {
         this.firestore = firestore;
     }
 
-    // READ
-    public User getUser(String userId) throws Exception{
+    public User getUser(String userId) throws Exception {
+        try {
+            DocumentSnapshot doc = firestore
+                    .collection("users")
+                    .document(userId)
+                    .get()
+                    .get();
 
-        DocumentSnapshot doc = firestore
-                .collection("users")
-                .document(userId)
-                .get()
-                .get();
+            if (!doc.exists()) {
+                System.out.println("User not found: " + userId);
+                return null;
+            }
 
-        if (!doc.exists()) {
-            System.out.println("User not found: " + userId);
-            return null;
+            User user = doc.toObject(User.class);
+            if (user == null) {
+                throw new IllegalAccessException("Failed to map User: " + userId);
+            }
+
+            return user;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong while fetching User " + userId, e);
         }
+    }
 
-        User user = doc.toObject(User.class);
-
-        System.out.println("---- Got User ----");
-        System.out.println("Name: " + user.getFirstName() + " " + user.getLastName());
-
-        return doc.toObject(User.class);
-
+    // DELETE
+    public void deleteUser(String userId) throws Exception{
+        try {
+            firestore.collection("userId").document(userId).delete();
+        } catch (Exception e) {
+            throw new Exception("Failed to delete user with id: " + userId, e);
+        }
     }
 }
