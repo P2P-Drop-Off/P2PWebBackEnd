@@ -16,7 +16,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/locations")
 public class LocationController {
-
     private final LocationRepository repository;
     private final LocationService service;
 
