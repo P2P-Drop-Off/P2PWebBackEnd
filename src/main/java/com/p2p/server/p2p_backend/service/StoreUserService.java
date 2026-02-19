@@ -18,7 +18,16 @@ public class StoreUserService {
         // Set UTC timestamp as ISO 8601 string for Firestore
         String utcTimestamp = Instant.now().toString();
         storeUser.setCreatedAt(utcTimestamp);
-        
-        return repository.createStoreUser(storeUser);
+        return null;
+        //return repository.createStoreUser(storeUser);
+    }
+
+    public StoreUser[] getNearbyStores(String userLocation) {
+        // TODO: Filter by store location and availability
+        return new StoreUser[0];
+    }
+
+    public void verifyDropOff(){
+        // called when user drop off item. store must confirm it's arrived with a code from generateDropOffCode().
     }
 }

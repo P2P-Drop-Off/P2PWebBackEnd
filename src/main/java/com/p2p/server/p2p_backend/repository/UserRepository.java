@@ -14,10 +14,9 @@ public class UserRepository {
     public User getUser(String userId) throws Exception {
         try {
             DocumentSnapshot doc = firestore
-                    .collection("users")
+                    .collection(User.PATH)
                     .document(userId)
-                    .get()
-                    .get();
+                    .get().get();
 
             if (!doc.exists()) {
                 System.out.println("User not found: " + userId);
@@ -25,6 +24,7 @@ public class UserRepository {
             }
 
             User user = doc.toObject(User.class);
+
             if (user == null) {
                 throw new IllegalAccessException("Failed to map User: " + userId);
             }
@@ -38,7 +38,7 @@ public class UserRepository {
     // DELETE
     public void deleteUser(String userId) throws Exception{
         try {
-            firestore.collection("userId").document(userId).delete();
+            firestore.collection(User.PATH).document(userId).delete();
         } catch (Exception e) {
             throw new Exception("Failed to delete user with id: " + userId, e);
         }
@@ -46,7 +46,7 @@ public class UserRepository {
 
     // CREATE
     public User createUser(User user) throws Exception {
-        DocumentReference docRef = firestore.collection("users").document();
+        DocumentReference docRef = firestore.collection(User.PATH).document();
         String userId = docRef.getId();
         user.setId(userId);
         

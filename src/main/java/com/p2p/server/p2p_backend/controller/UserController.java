@@ -15,17 +15,15 @@ import com.p2p.server.p2p_backend.model.User;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository repository;
-    private final UserService service;
+    private final UserService userService;
 
-    public UserController(UserRepository repository, UserService service) {
-        this.repository = repository;
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> printUser(@PathVariable String id) throws Exception {
-        User user = repository.getUser(id);
+        User user = userService.getUser(id);
 
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -36,7 +34,7 @@ public class UserController {
 
     @PostMapping("/post")
     public ResponseEntity<User> newUser(@RequestBody User user) throws Exception {
-        User createdUser = service.createUser(user);
+        User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
     }
 }

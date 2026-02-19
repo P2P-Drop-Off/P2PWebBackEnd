@@ -11,6 +11,7 @@ public class StoreUser {
     private String createdAt;
     private String phone;
     private String website;
+    private Boolean available;
 
     public StoreUser() {}
 
@@ -76,4 +77,10 @@ public class StoreUser {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available){ this.available = available; }
 }

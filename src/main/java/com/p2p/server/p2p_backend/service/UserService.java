@@ -4,6 +4,7 @@ import com.p2p.server.p2p_backend.model.User;
 import com.p2p.server.p2p_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -20,5 +21,15 @@ public class UserService {
         user.setCreatedAt(utcTimestamp);
         
         return repository.createUser(user);
+    }
+
+    public User getUser(String userId) throws Exception {
+        return null;
+    }
+
+    public Boolean verifyMarketplaceLink(String link, User user) {
+        // TODO: verify the link and verify it's from the sending user's linked account.
+        //  Right now, have the user input data but later have it scrape.
+        return false;
     }
 }

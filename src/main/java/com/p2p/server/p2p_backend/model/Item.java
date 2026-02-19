@@ -1,8 +1,11 @@
 package com.p2p.server.p2p_backend.model;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 public class Item {
 
     private String id;
+
     private User seller;
     private String name;
     private String createdAt;
@@ -11,6 +14,7 @@ public class Item {
     private String link;
     private String status;
     private String transactionId;
+    private BigDecimal price;
 
     public Item(){}
 
@@ -93,5 +97,14 @@ public class Item {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    // transactionId
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setTransactionId(BigDecimal price) {
+        this.price = price;
     }
 }

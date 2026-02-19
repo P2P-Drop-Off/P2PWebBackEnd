@@ -37,6 +37,10 @@ public class LocationRepository {
         }
     }
 
+    public Location createLocation(Location location) throws Exception{
+        return null;
+    }
+
     // DELETE
     public void deleteLocation(String locationId) throws Exception{
         try {

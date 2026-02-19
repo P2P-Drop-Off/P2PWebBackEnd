@@ -3,8 +3,10 @@ package com.p2p.server.p2p_backend.model;
 
 import java.util.List;
 import java.time.*;
+import java.util.Map;
 
 public class User {
+    public static final String PATH = "tasks";
 
     private String id;
 
@@ -16,6 +18,7 @@ public class User {
     private String zip;
     private String createdAt;
     private List<String> interests;
+    private Map<String, String> marketPlaceAccounts;
 
     public User() {}
 
@@ -99,4 +102,13 @@ public class User {
     public void setInterests(List<String> interests) {
         this.interests = interests;
     }
+
+    public Map<String, String> getMarketPlaceAccounts() {
+        return marketPlaceAccounts;
+    }
+
+    public void setMarketPlaceAccounts(Map<String, String> marketPlaceAccounts) {
+        this.marketPlaceAccounts = marketPlaceAccounts;
+    }
+
 }

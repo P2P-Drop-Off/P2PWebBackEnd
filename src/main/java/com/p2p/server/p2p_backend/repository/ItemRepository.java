@@ -1,5 +1,6 @@
 package com.p2p.server.p2p_backend.repository;
 
+import com.p2p.server.p2p_backend.exceptions.ItemNotFoundException;
 import com.p2p.server.p2p_backend.model.Item;
 import com.google.cloud.firestore.*;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -23,7 +24,7 @@ public class ItemRepository {
 
             if (!doc.exists()) {
                 System.out.println("Item not found: " + itemId);
-                return null;
+                throw new ItemNotFoundException("Item with id " + itemId + "not found");
             }
 
             Item item = doc.toObject(Item.class);
@@ -36,6 +37,10 @@ public class ItemRepository {
             throw new Exception("Something went wrong while fetching item " + itemId, e);
 
         }
+    }
+
+    public void createItem(Item item) throws Exception{
+
     }
 
     // DELETE
