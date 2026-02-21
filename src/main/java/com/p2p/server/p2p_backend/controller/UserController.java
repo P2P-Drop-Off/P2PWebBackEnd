@@ -16,7 +16,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> printUser(@PathVariable String id) throws Exception {
+    public ResponseEntity<User> getUser(@PathVariable String id) throws Exception {
 
         User user = userService.getUser(id);
 
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> newUser(@RequestBody User user) throws Exception {
+    public ResponseEntity<User> createUser(@RequestBody User user) throws Exception {
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
     }
@@ -37,6 +37,12 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestBody User user) throws Exception {
         User newUser = userService.updateUser(user);
         return ResponseEntity.ok(newUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) throws Exception {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

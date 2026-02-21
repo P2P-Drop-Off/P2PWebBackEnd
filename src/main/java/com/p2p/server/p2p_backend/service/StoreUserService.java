@@ -15,11 +15,21 @@ public class StoreUserService {
     }
 
     public StoreUser createStoreUser(StoreUser storeUser) throws Exception {
-        // Set UTC timestamp as ISO 8601 string for Firestore
         String utcTimestamp = Instant.now().toString();
         storeUser.setCreatedAt(utcTimestamp);
-        return null;
-        //return repository.createStoreUser(storeUser);
+        return repository.createStoreUser(storeUser);
+    }
+
+    public StoreUser getStoreUser(String storeUserId) throws Exception {
+        return repository.getStoreUser(storeUserId);
+    }
+
+    public StoreUser updateStoreUser(StoreUser storeUser) throws Exception {
+        return repository.updateStoreUser(storeUser);
+    }
+
+    public void deleteStoreUser(String storeUserId) throws Exception {
+        repository.deleteStoreUser(storeUserId);
     }
 
     public StoreUser[] getNearbyStores(String userLocation) {

@@ -8,6 +8,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.p2p.server.p2p_backend.model.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -37,23 +38,36 @@ public class ItemRepository {
         }
     }
 
-    public Item createItem(Item item) throws Exception{
+    public Item createItem(Item item) throws Exception {
         try {
-            DocumentReference docRef = firestore
-                    .collection(Item.PATH)
-                    .document();
-            docRef.set(item).get();
+            DocumentReference docRef = firestore.collection(Item.PATH).document();
             item.setId(docRef.getId());
-            return item;
-        } catch (InterruptedException e) {
-            //Thread.currentThread().interrupt();
-            throw new RuntimeException("Interrupted while fetching item", e);
+            docRef.set(item).get();
+            return getItem(item.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while creating item", e);
         } catch (ExecutionException e) {
-            throw new RuntimeException("Failed to fetch item from database", e);
+            throw new RuntimeException("Execution interrupted while creating item", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while creating item", e);
         }
     }
 
-    // DELETE
+    public Item updateItem(Item item) throws Exception {
+        try {
+            firestore.collection(Item.PATH)
+                    .document(item.getId())
+                    .set(item).get();
+            return getItem(item.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while updating item", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Execution interrupted while updating item", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while updating item", e);
+        }
+    }
+
     public void deleteItem(String itemId) throws Exception{
         firestore.collection("items").document(itemId).delete();
     }

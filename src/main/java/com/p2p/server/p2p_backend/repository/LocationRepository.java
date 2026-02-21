@@ -1,8 +1,12 @@
 package com.p2p.server.p2p_backend.repository;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.p2p.server.p2p_backend.model.Location;
 import org.springframework.stereotype.Repository;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 @Repository
 public class LocationRepository {
@@ -37,11 +41,36 @@ public class LocationRepository {
         }
     }
 
-    public Location createLocation(Location location) throws Exception{
-        return null;
+    public Location createLocation(Location location) throws Exception {
+        try {
+            DocumentReference docRef = firestore.collection(Location.PATH).document();
+            location.setId(docRef.getId());
+            docRef.set(location).get();
+            return getLocation(location.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while creating location", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Execution interrupted while creating location", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while creating location", e);
+        }
     }
 
-    // DELETE
+    public Location updateLocation(Location location) throws Exception {
+        try {
+            firestore.collection(Location.PATH)
+                    .document(location.getId())
+                    .set(location).get();
+            return getLocation(location.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while updating location", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Execution interrupted while updating location", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while updating location", e);
+        }
+    }
+
     public void deleteLocation(String locationId) throws Exception{
         try {
             firestore.collection("locations").document(locationId).delete();

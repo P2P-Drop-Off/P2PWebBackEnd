@@ -1,12 +1,7 @@
 package com.p2p.server.p2p_backend.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import com.p2p.server.p2p_backend.repository.LocationRepository;
 import com.p2p.server.p2p_backend.service.LocationService;
 import com.p2p.server.p2p_backend.model.Location;
@@ -68,5 +63,17 @@ public class LocationController {
             
             return ResponseEntity.status(500).body(errorResponse);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity<Location> updateLocation(@RequestBody Location location) throws Exception {
+        Location updatedLocation = service.updateLocation(location);
+        return ResponseEntity.ok(updatedLocation);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLocation(@PathVariable String id) throws Exception {
+        service.deleteLocation(id);
+        return ResponseEntity.noContent().build();
     }
 }

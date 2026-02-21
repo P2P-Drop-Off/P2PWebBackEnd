@@ -4,6 +4,9 @@ import com.p2p.server.p2p_backend.model.StoreUser;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+
 @Repository
 public class StoreUserRepository {
 
@@ -38,12 +41,38 @@ public class StoreUserRepository {
         }
     }
 
-    // DELETE
-    public void deleteStoreUser(String storeUserId) throws Exception{
+    public StoreUser createStoreUser(StoreUser storeUser) throws Exception {
         try {
-            firestore.collection("storeUsers").document(storeUserId).delete();
-        } catch (Exception e) {
-            throw new Exception("Failed to delete storeUser with id: " + storeUserId, e);
+            DocumentReference docRef = firestore.collection(StoreUser.PATH).document();
+            storeUser.setId(docRef.getId());
+            docRef.set(storeUser).get();
+            return getStoreUser(storeUser.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while creating store user", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Execution interrupted while creating store user", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while creating store user", e);
         }
     }
+
+    public StoreUser updateStoreUser(StoreUser storeUser) throws Exception {
+        try {
+            firestore.collection(StoreUser.PATH)
+                    .document(storeUser.getId())
+                    .set(storeUser).get();
+            return getStoreUser(storeUser.getId());
+        } catch (CancellationException e) {
+            throw new RuntimeException("Cancelled while updating store user", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Execution interrupted while updating store user", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while updating store user", e);
+        }
+    }
+
+    public void deleteStoreUser(String storeUserId) throws Exception {
+        firestore.collection(StoreUser.PATH).document(storeUserId).delete();
+    }
+
 }

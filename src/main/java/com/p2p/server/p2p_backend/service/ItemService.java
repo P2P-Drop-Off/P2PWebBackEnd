@@ -28,6 +28,14 @@ public class ItemService {
         return repository.getItem(itemId);
     }
 
+    public Item updateItem(Item item) throws Exception {
+        return repository.updateItem(item);
+    }
+
+    public void deleteItem(String itemId) throws Exception {
+        repository.deleteItem(itemId);
+    }
+
     public String generateItemLink(StoreUser dropOffStore) {
         // Use:
         //  Called when user needs to send a transaction link to the buyer.

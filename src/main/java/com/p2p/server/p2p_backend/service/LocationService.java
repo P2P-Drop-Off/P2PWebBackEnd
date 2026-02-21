@@ -21,4 +21,16 @@ public class LocationService {
         
         return repository.createLocation(location);
     }
+
+    public Location getLocation(String locationId) throws Exception {
+        return repository.getLocation(locationId);
+    }
+
+    public Location updateLocation(Location location) throws Exception {
+        return repository.updateLocation(location);
+    }
+
+    public void deleteLocation(String locationId) throws Exception {
+        repository.deleteLocation(locationId);
+    }
 }

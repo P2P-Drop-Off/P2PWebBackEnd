@@ -1,12 +1,8 @@
 package com.p2p.server.p2p_backend.controller;
 
+import com.p2p.server.p2p_backend.model.Item;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import com.p2p.server.p2p_backend.repository.StoreUserRepository;
 import com.p2p.server.p2p_backend.service.StoreUserService;
 import com.p2p.server.p2p_backend.model.StoreUser;
@@ -69,5 +65,17 @@ public class StoreUserController {
             
             return ResponseEntity.status(500).body(errorResponse);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity<StoreUser> updateStoreUser(@RequestBody StoreUser storeUser) throws Exception {
+        StoreUser updatedStoreUser = service.updateStoreUser(storeUser);
+        return ResponseEntity.ok(updatedStoreUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) throws Exception {
+        service.deleteStoreUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

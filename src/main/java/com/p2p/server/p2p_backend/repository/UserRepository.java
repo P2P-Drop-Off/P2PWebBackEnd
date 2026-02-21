@@ -44,8 +44,7 @@ public class UserRepository {
     public User createUser(User user) throws Exception {
         try {
             DocumentReference docRef = firestore.collection(User.PATH).document();
-            String userId = docRef.getId();
-            user.setId(userId);
+            user.setId(docRef.getId());
             docRef.set(user).get();
             return user;
         } catch (CancellationException e) {
@@ -59,12 +58,11 @@ public class UserRepository {
 
     public User updateUser(User user) throws Exception{
         try {
-            ApiFuture<WriteResult> future = firestore
+            WriteResult result = firestore
                     .collection(User.PATH)
                     .document(user.getId())
-                    .set(user);
-            WriteResult result = future.get();
-            return user;
+                    .set(user).get();
+            return getUser(user.getId());
         } catch (CancellationException e) {
             throw new RuntimeException("Cancelled while fetching user", e);
         } catch (ExecutionException e) {
