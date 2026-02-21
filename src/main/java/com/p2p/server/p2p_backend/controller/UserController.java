@@ -1,12 +1,7 @@
 package com.p2p.server.p2p_backend.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import com.p2p.server.p2p_backend.service.UserService;
 import com.p2p.server.p2p_backend.model.User;
 
@@ -23,8 +18,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> printUser(@PathVariable String id) throws Exception {
 
-        System.out.println("Hello");
-
         User user = userService.getUser(id);
 
         if (user == null) {
@@ -34,10 +27,16 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity<User> newUser(@RequestBody User user) throws Exception {
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
+    }
+
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user) throws Exception {
+        User newUser = userService.updateUser(user);
+        return ResponseEntity.ok(newUser);
     }
 }
 

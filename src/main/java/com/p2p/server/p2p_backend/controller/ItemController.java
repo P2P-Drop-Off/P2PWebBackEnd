@@ -1,7 +1,5 @@
 package com.p2p.server.p2p_backend.controller;
 
-import com.p2p.server.p2p_backend.model.User;
-import com.p2p.server.p2p_backend.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.p2p.server.p2p_backend.service.ItemService;
@@ -24,7 +22,7 @@ public class ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<CreateItemResponse> createItem(@RequestBody CreateItemRequest request) throws Exception {
         return null;
     }

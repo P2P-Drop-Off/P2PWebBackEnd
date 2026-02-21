@@ -26,9 +26,8 @@ public class UserService {
         return repository.getUser(userId);
     }
 
-    public Boolean verifyMarketplaceLink(String link, User user) {
-        // TODO: verify the link and verify it's from the sending user's linked account.
-        //  Right now, have the user input data but later have it scrape.
-        return false;
+    public User updateUser(User user) throws Exception {
+        return repository.updateUser(user);
     }
+
 }

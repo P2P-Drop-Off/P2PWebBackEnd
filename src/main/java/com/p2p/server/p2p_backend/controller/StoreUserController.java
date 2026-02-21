@@ -44,7 +44,7 @@ public class StoreUserController {
         return ResponseEntity.ok(storeUser);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity<Map<String, String>> newStoreUser(@RequestBody StoreUser storeUser) {
         System.out.println("===== POST /storeUsers/post called =====");
         System.out.println("Received storeUser: " + storeUser.getFirstName() + " " + storeUser.getLastName());

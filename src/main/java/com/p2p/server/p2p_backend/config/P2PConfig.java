@@ -5,6 +5,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,11 +34,8 @@ public class P2PConfig {
         this.secrets = mapper.readValue(privateKey.getInputStream(), Map.class);
     }
 
-    // Firestore Bean
     @Bean
-    public Firestore firestore() throws IOException {
-
-        // read secret.json as Map
+    public FirebaseApp firebaseApp() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         Object firebaseNode = secrets.get("firebase");
@@ -54,7 +52,17 @@ public class P2PConfig {
                 ? FirebaseApp.initializeApp(firebaseOptions)
                 : FirebaseApp.getInstance();
 
+        return firebaseApp;
+    }
+
+    @Bean
+    public Firestore firestore(FirebaseApp firebaseApp) throws IOException {
         return FirestoreClient.getFirestore(firebaseApp);
+    }
+
+    @Bean
+    public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
+        return FirebaseAuth.getInstance(firebaseApp);
     }
 
     // Spring Security UserDetailsService Bean
@@ -88,4 +96,5 @@ public class P2PConfig {
 
         return http.build();
     }
+
 }
