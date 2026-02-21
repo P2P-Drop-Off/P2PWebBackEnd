@@ -43,7 +43,7 @@ public class LocationController {
         return ResponseEntity.ok(location);
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity<Map<String, String>> newLocation(@RequestBody Location location) {
         System.out.println("===== POST /locations/post called =====");
         System.out.println("Received location: " + location.getName());

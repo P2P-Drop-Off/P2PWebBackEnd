@@ -97,6 +97,4 @@ public class P2PConfig {
         return http.build();
     }
 
-
-
 }
