@@ -5,6 +5,7 @@ import com.p2p.server.p2p_backend.model.Item;
 import com.p2p.server.p2p_backend.model.StoreUser;
 import com.p2p.server.p2p_backend.model.User;
 import com.p2p.server.p2p_backend.repository.ItemRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

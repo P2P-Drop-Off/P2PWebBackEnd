@@ -1,12 +1,9 @@
 package com.p2p.server.p2p_backend.controller;
 
-import com.p2p.server.p2p_backend.model.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.p2p.server.p2p_backend.service.ItemService;
 import com.p2p.server.p2p_backend.model.Item;
-import com.p2p.server.p2p_backend.dto.response.CreateItemResponse;
-import com.p2p.server.p2p_backend.dto.request.CreateItemRequest;
 
 @RestController
 @RequestMapping("/items")

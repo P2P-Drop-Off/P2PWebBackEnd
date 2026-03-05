@@ -7,16 +7,17 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.FirestoreClient;
+import com.p2p.server.p2p_backend.auth.FirebaseTokenFilter;
+import com.p2p.server.p2p_backend.model.User;
+import com.p2p.server.p2p_backend.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,8 +26,8 @@ import java.util.Map;
 
 
 @Configuration
+@EnableMethodSecurity
 public class P2PConfig {
-
     private final Map<String, Object> secrets;
 
     public P2PConfig(@Value("classpath:secret.json") Resource privateKey) throws IOException {
@@ -64,37 +65,4 @@ public class P2PConfig {
     public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
         return FirebaseAuth.getInstance(firebaseApp);
     }
-
-    // Spring Security UserDetailsService Bean
-    @Bean 
-    public UserDetailsService userDetailsService() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
-        Map<String, Object> springNode = (Map<String, Object>) secrets.get("spring");
-        Map<String, Object> securityNode = (Map<String, Object>) springNode.get("security");
-        Map<String, String> userNode = (Map<String, String>) securityNode.get("user");
-
-        String username = userNode.get("name");
-        String password = userNode.get("password");
-
-        return new InMemoryUserDetailsManager(
-                User.withUsername(username)
-                        .password("{noop}" + password)
-                        .roles("USER")
-                        .build()
-        );
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults());
-
-        return http.build();
-    }
-
 }
