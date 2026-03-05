@@ -25,6 +25,7 @@ public class ItemService {
         return repository.createItem(item);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(authentication, id)")
     public Item getItem(String itemId) throws Exception {
         return repository.getItem(itemId);
     }
@@ -35,27 +36,5 @@ public class ItemService {
 
     public void deleteItem(String itemId) throws Exception {
         repository.deleteItem(itemId);
-    }
-
-    public String generateItemLink(StoreUser dropOffStore) {
-        // Use:
-        //  Called when user needs to send a transaction link to the buyer.
-        //  Assumption:
-        //      1) user already has been served getNearbyStores() and picks one
-        //      2) user already has created the Item
-        //  Future calls for Item Link should be done through other controller>service calls.
-        return "";
-    }
-
-    public String generateDropOffCode(){
-        return "";
-    }
-
-    public void changeItemLocation() {
-        // Called when the Buyer requests Seller to change sale location (outside of app)
-    }
-
-    public void confirmIntentToBuy() {
-        // Called when the Buyer requests user
     }
 }
