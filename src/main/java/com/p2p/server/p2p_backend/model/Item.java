@@ -20,6 +20,8 @@ public class Item {
     private String title;
     private String image;
     private String location;
+    private String locationId;
+    private String imageUrl;
     private int views;
     private int comments;
 
@@ -42,6 +44,14 @@ public class Item {
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
+
+    public String getLocationId() { return locationId; }
+
+    public void setLocationId(String locationId) { this.locationId = locationId; }
+
+    public String getImageUrl() { return imageUrl; }
+
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public int getViews() { return views; }
     public void setViews(int views) { this.views = views; }
