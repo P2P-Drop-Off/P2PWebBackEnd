@@ -23,10 +23,6 @@ public class UserRepository {
                     .collection(User.PATH)
                     .document(userId)
                     .get().get();
-
-            if (!doc.exists()) {
-                throw new ItemNotFoundException(userId);
-            }
             return doc.toObject(User.class);
 
         } catch (InterruptedException e) {

@@ -5,7 +5,6 @@ import com.p2p.server.p2p_backend.exceptions.ItemNotFoundException;
 import com.p2p.server.p2p_backend.model.Item;
 import com.google.cloud.firestore.*;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.p2p.server.p2p_backend.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.CancellationException;

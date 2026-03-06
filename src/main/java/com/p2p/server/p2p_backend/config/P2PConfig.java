@@ -104,9 +104,6 @@ public class P2PConfig implements WebMvcConfigurer {
         return http.build();
     }
 
-
-    
-
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();

@@ -27,6 +27,7 @@ public class ItemService {
             throw new RuntimeException("Failed to fetch item: " + id, e);
         }
     }
+
     // Create new item
     public CreateItemResponse createItem(CreateItemRequest request) {
         try {
