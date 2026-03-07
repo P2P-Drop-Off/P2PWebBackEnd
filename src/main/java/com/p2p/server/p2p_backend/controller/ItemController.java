@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile; //1
 import com.p2p.server.p2p_backend.service.ImageService; //1
 import org.springframework.web.bind.annotation.ModelAttribute; //1
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -22,6 +23,11 @@ public class ItemController {
     public ItemController(ItemService itemService, ImageService imageService) {
         this.itemService = itemService;
         this.imageService = imageService;
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<List<GetItemResponse>> getAllItems() {
+        return ResponseEntity.ok(itemService.getAllItems());
     }
 
     // GET item by ID

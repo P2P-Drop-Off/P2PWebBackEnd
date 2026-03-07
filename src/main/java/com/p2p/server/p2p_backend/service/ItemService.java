@@ -8,6 +8,8 @@ import com.p2p.server.p2p_backend.model.Item;
 import com.p2p.server.p2p_backend.repository.FirestoreItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ItemService {
 
@@ -16,6 +18,21 @@ public class ItemService {
     public ItemService(FirestoreItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
+
+    public List<GetItemResponse> getAllItems() {
+    try {
+        List<Item> items = itemRepository.getAllItems();
+
+        return items.stream()
+                .map(GetItemResponse::new)
+                .toList();
+
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to fetch items", e);
+    }
+}
+
+    
 
     public GetItemResponse getItemById(String id) {
         try {
