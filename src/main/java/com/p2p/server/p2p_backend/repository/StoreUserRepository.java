@@ -26,7 +26,6 @@ public class StoreUserRepository {
                     .get();
 
             if (!doc.exists()) {
-                System.out.println("StoreUser not found: " + userId);
                 return null;
             }
 
