@@ -1,34 +1,50 @@
 package com.p2p.server.p2p_backend.service;
 
-import com.p2p.server.p2p_backend.model.Item;
-import com.p2p.server.p2p_backend.repository.ItemRepository;
 import com.p2p.server.p2p_backend.dto.request.CreateItemRequest;
 import com.p2p.server.p2p_backend.dto.response.CreateItemResponse;
 import com.p2p.server.p2p_backend.dto.response.GetItemResponse;
 import com.p2p.server.p2p_backend.exceptions.ItemNotFoundException;
+import com.p2p.server.p2p_backend.model.Item;
+import com.p2p.server.p2p_backend.repository.FirestoreItemRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ItemService {
 
-    private final ItemRepository itemRepository;
+    private final FirestoreItemRepository itemRepository;
 
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(FirestoreItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
 
-   // Get item by ID
+    public List<GetItemResponse> getAllItems() {
+    try {
+        List<Item> items = itemRepository.getAllItems();
+
+        return items.stream()
+                .map(GetItemResponse::new)
+                .toList();
+
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to fetch items", e);
+    }
+}
+
+    
+
     public GetItemResponse getItemById(String id) {
         try {
             Item item = itemRepository.getItem(id);
-            if (item == null) throw new ItemNotFoundException("Item not found: " + id);
             return new GetItemResponse(item);
+        } catch (ItemNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch item: " + id, e);
         }
     }
 
-    // Create new item
     public CreateItemResponse createItem(CreateItemRequest request) {
         try {
             Item item = new Item();
@@ -42,17 +58,15 @@ public class ItemService {
             item.setStatus("active");
 
             Item saved = itemRepository.createItem(item);
-            return new CreateItemResponse(saved.getId(), saved.getTitle());
+            return new CreateItemResponse(saved.getId(), saved.getTitle(), saved.getImage());
         } catch (Exception e) {
             throw new RuntimeException("Failed to create item", e);
         }
     }
 
-    // Update existing item
     public CreateItemResponse updateItem(String id, CreateItemRequest request) {
         try {
             Item item = itemRepository.getItem(id);
-            if (item == null) throw new ItemNotFoundException("Item not found: " + id);
 
             item.setTitle(request.getTitle());
             item.setDescription(request.getDescription());
@@ -61,13 +75,14 @@ public class ItemService {
             item.setLocation(request.getLocation());
 
             Item updated = itemRepository.updateItem(item);
-            return new CreateItemResponse(updated.getId(), updated.getTitle());
+            return new CreateItemResponse(updated.getId(), updated.getTitle(), updated.getImage());
+        } catch (ItemNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to update item: " + id, e);
         }
     }
 
-    // Delete item
     public void deleteItem(String id) {
         try {
             itemRepository.deleteItem(id);

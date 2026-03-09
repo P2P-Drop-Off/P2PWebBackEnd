@@ -1,5 +1,6 @@
 package com.p2p.server.p2p_backend.model;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.Timestamp;
 
 import java.math.BigDecimal;
 
@@ -10,7 +11,7 @@ public class Item {
 
     private String seller;
     private String name;
-    private String createdAt;
+    private Timestamp createdAt;
     private String description;
     private String store;
     private String link;
@@ -105,11 +106,11 @@ public class Item {
     }
 
     // createdAt
-    public String getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

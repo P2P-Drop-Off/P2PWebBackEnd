@@ -8,6 +8,12 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class FirestoreItemRepository {
 
@@ -15,6 +21,24 @@ public class FirestoreItemRepository {
 
     public FirestoreItemRepository(Firestore firestore) {
         this.firestore = firestore;
+    }
+
+    public List<Item> getAllItems() throws Exception {
+
+        List<Item> items = new ArrayList<>();
+
+        ApiFuture<QuerySnapshot> future =
+                firestore.collection("items").get();
+
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        for (QueryDocumentSnapshot doc : documents) {
+            Item item = doc.toObject(Item.class);
+            item.setId(doc.getId());
+            items.add(item);
+        }
+
+        return items;
     }
 
     public Item getItem(String itemId) throws Exception {

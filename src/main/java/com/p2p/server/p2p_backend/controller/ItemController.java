@@ -1,47 +1,70 @@
 package com.p2p.server.p2p_backend.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
+import com.p2p.server.p2p_backend.dto.request.CreateItemRequest;
+import com.p2p.server.p2p_backend.dto.response.CreateItemResponse;
+import com.p2p.server.p2p_backend.dto.response.GetItemResponse;
 import com.p2p.server.p2p_backend.service.ItemService;
-import com.p2p.server.p2p_backend.model.Item;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile; //1
+import com.p2p.server.p2p_backend.service.ImageService; //1
+import org.springframework.web.bind.annotation.ModelAttribute; //1
+import java.util.List;
 
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/api")
 public class ItemController {
+
     private final ItemService itemService;
+    private final ImageService imageService;
 
-    public ItemController(ItemService itemService) {
+    @Autowired
+    public ItemController(ItemService itemService, ImageService imageService) {
         this.itemService = itemService;
+        this.imageService = imageService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Item> getItem(@PathVariable String id) throws Exception {
-
-        Item item = itemService.getItemResponse(id);
-
-        if (item == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(item);
+    @GetMapping("/items")
+    public ResponseEntity<List<GetItemResponse>> getAllItems() {
+        return ResponseEntity.ok(itemService.getAllItems());
     }
 
-    @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) throws Exception {
-        Item createdItem = itemService.createItem(item);
-        return ResponseEntity.ok(createdItem);
+    // GET item by ID
+    @GetMapping("/items/{id}")
+    public ResponseEntity<GetItemResponse> getItemById(@PathVariable String id) {
+        GetItemResponse response = itemService.getItemById(id);
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping
-    public ResponseEntity<Item> updateItem(@RequestBody Item item) throws Exception {
-        Item updatedItem = itemService.updateItem(item);
-        return ResponseEntity.ok(updatedItem);
+    // CREATE a new item //1
+    @PostMapping(value = "/items", consumes = "multipart/form-data")
+    public ResponseEntity<CreateItemResponse> createItem(
+            @ModelAttribute CreateItemRequest request,
+            @RequestParam("imageFile") MultipartFile imageFile
+    ) throws Exception {
+
+        String imageUrl = imageService.uploadImage(imageFile);
+        request.setImage(imageUrl);
+
+        CreateItemResponse response = itemService.createItem(request);
+
+        return ResponseEntity.ok(response);
+    }
+        
+
+    // UPDATE an existing item
+    @PutMapping("/items/{id}")
+    public ResponseEntity<CreateItemResponse> updateItem(@PathVariable String id,
+                                                         @RequestBody CreateItemRequest request) {
+        CreateItemResponse response = itemService.updateItem(id, request);
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) throws Exception {
+    // DELETE an item
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Void> deleteItem(@PathVariable String id) {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
-
 }
