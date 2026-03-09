@@ -99,8 +99,7 @@ public class P2PConfig implements WebMvcConfigurer {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
-    .anyRequest().permitAll()
-)
+            .anyRequest().permitAll())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .httpBasic(httpBasic -> httpBasic.disable()); // disable HTTP Basic for dev
 

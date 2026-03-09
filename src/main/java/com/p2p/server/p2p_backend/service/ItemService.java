@@ -30,9 +30,18 @@ public class ItemService {
     } catch (Exception e) {
         throw new RuntimeException("Failed to fetch items", e);
     }
-}
+    }
 
-    
+    public Item getItem(String id) {
+        try {
+            Item item = itemRepository.getItem(id);
+            return itemRepository.getItem(id);
+        } catch (ItemNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch item: " + id, e);
+        }
+    }
 
     public GetItemResponse getItemById(String id) {
         try {
