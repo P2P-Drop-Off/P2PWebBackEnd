@@ -29,7 +29,7 @@ public class ItemService {
 
     } catch (Exception e) {
         throw new RuntimeException("Failed to fetch items", e);
-    }
+        }
     }
 
     public Item getItem(String id) {

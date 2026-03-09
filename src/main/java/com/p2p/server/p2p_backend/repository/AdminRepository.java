@@ -4,9 +4,11 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.p2p.server.p2p_backend.model.Admin;
 import com.p2p.server.p2p_backend.model.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.ExecutionException;
 
+@Repository
 public class AdminRepository {
 
     private final Firestore firestore;
