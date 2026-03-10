@@ -28,10 +28,14 @@ public class SpringSecurity {
                 .httpBasic(basic -> basic.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow preflight
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers("/auth").permitAll() // doesn't exist yet
-                        .anyRequest().authenticated()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/users").permitAll()
+
+                    // public listing link:
+                    .requestMatchers(HttpMethod.GET, "/api/items/*").permitAll()
+
+                    .requestMatchers("/auth").permitAll()
+                    .anyRequest().authenticated()
                 ).addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
