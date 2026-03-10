@@ -96,6 +96,13 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    //controller exndpoint for buyer approving transaction
+    @PutMapping("/items/{id}/approve")
+    public ResponseEntity<?> approveTransaction(@PathVariable String id) {
+        itemService.approveTransaction(id);
+        return ResponseEntity.ok().build();
+    }
+
     // DELETE an item
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Void> deleteItem(@PathVariable String id) {

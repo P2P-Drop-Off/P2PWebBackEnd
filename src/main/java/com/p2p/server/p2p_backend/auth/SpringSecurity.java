@@ -30,6 +30,7 @@ public class SpringSecurity {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/items/*/approve").permitAll()
 
                     // public listing link:
                     .requestMatchers(HttpMethod.GET, "/api/items/*").permitAll()

@@ -58,7 +58,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (request.getMethod().equals("OPTIONS")) {
+        String path = request.getRequestURI();
+        
+        if (request.getMethod().equals("OPTIONS") ||
+            (request.getMethod().equals("GET") && path.startsWith("/api/items/")) ||
+            (request.getMethod().equals("PUT") && path.contains("/approve"))) {
             filterChain.doFilter(request, response);
             return;
         }

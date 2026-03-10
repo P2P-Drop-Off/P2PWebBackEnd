@@ -12,6 +12,7 @@ public class GetItemResponse {
     private BigDecimal price;
     private String image;
     private String location;
+    private String status;
 
     public GetItemResponse(Item item) {
         this.id = item.getId();
@@ -21,6 +22,7 @@ public class GetItemResponse {
         this.price = item.getPrice();
         this.image = item.getImage();
         this.location = item.getLocation();
+        this.status = item.getStatus();
     }
 
     // Getters
@@ -31,4 +33,5 @@ public class GetItemResponse {
     public BigDecimal getPrice() { return price; }
     public String getImage() { return image; }
     public String getLocation() { return location; }
+    public String getStatus() { return status; }
 }

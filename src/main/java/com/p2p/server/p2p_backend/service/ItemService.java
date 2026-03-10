@@ -117,4 +117,19 @@ public class ItemService {
             throw new RuntimeException("Failed to delete item: " + id, e);
         }
     }
+
+    public void approveTransaction(String id) {
+        try {
+            Item item = itemRepository.getItem(id);
+
+            item.setStatus("approved_by_buyer");
+
+            itemRepository.updateItem(item);
+
+        } catch (ItemNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to approve transaction for item: " + id, e);
+        }
+    }
 }
