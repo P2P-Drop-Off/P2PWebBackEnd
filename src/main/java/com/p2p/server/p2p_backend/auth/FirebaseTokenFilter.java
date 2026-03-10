@@ -43,6 +43,10 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     }
 
     private GrantedAuthority validateAuthority(String uid, String userType) throws Exception{
+        if (userType == null) {
+            return new SimpleGrantedAuthority("USER"); // default to USER 
+        }
+        
         if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) == null) ||
                 (userType.equals("USER") && userService.getUser(uid) != null) ||
                 (userType.equals("ADMIN") && adminService.getAdmin(uid) != null)) {
@@ -54,10 +58,16 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         try {
             String token = parseJwt(request);
             if (token == null) {
-                throw new Exception("No UID");
+                filterChain.doFilter(request, response);
+                return;
             }
 
             FirebaseToken decoded = firebaseAuth.verifyIdToken(token);
@@ -77,8 +87,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         } catch (FirebaseAuthException | ItemNotFoundException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        } catch(Exception ignored) {
-            System.out.println(ignored);
+        } catch(Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 

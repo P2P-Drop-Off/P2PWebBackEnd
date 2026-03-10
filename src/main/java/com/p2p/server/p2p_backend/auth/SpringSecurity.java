@@ -22,11 +22,13 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         System.out.println("filterChain");
         http
+                .cors(cors -> {}) 
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow preflight
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers("/auth").permitAll() // doesn't exist yet
                         .anyRequest().authenticated()

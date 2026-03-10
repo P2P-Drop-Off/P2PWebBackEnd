@@ -7,10 +7,14 @@ import com.p2p.server.p2p_backend.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile; //1
-import com.p2p.server.p2p_backend.service.ImageService; //1
-import org.springframework.web.bind.annotation.ModelAttribute; //1
+import org.springframework.web.multipart.MultipartFile; 
+import com.p2p.server.p2p_backend.service.ImageService; 
+import org.springframework.web.bind.annotation.ModelAttribute; 
 import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -19,6 +23,16 @@ public class ItemController {
     private final ItemService itemService;
     private final ImageService imageService;
 
+    private FirebaseToken verifyToken(HttpServletRequest request) throws Exception {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new Exception("No Authorization header found"); // use Exception
+        }
+
+        String idToken = authHeader.replace("Bearer ", "");
+        return FirebaseAuth.getInstance().verifyIdToken(idToken);
+    }
+
     @Autowired
     public ItemController(ItemService itemService, ImageService imageService) {
         this.itemService = itemService;
@@ -26,8 +40,18 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<GetItemResponse>> getAllItems() {
-        return ResponseEntity.ok(itemService.getAllItems());
+    public ResponseEntity<List<GetItemResponse>> getAllItems(HttpServletRequest request) {
+        try {
+            FirebaseToken decodedToken = verifyToken(request);
+            if (decodedToken == null) {
+                return ResponseEntity.status(403).build();
+            }
+            return ResponseEntity.ok(itemService.getAllItems());
+        } catch (FirebaseAuthException e) {
+            return ResponseEntity.status(403).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
     // GET item by ID
@@ -37,19 +61,30 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    // CREATE a new item //1
+    // CREATE a new item
     @PostMapping(value = "/items", consumes = "multipart/form-data")
     public ResponseEntity<CreateItemResponse> createItem(
-            @ModelAttribute CreateItemRequest request,
+            HttpServletRequest request,
+            @ModelAttribute CreateItemRequest createRequest,
             @RequestParam("imageFile") MultipartFile imageFile
     ) throws Exception {
+        try {
+            FirebaseToken decodedToken = verifyToken(request);
+            String uid = decodedToken.getUid();
 
-        String imageUrl = imageService.uploadImage(imageFile);
-        request.setImage(imageUrl);
+            // Upload image
+            String imageUrl = imageService.uploadImage(imageFile);
+            createRequest.setImage(imageUrl);
 
-        CreateItemResponse response = itemService.createItem(request);
+            // Set owner UID
+            createRequest.setOwnerUid(uid);
 
-        return ResponseEntity.ok(response);
+            CreateItemResponse response = itemService.createItem(createRequest);
+
+            return ResponseEntity.ok(response);
+        } catch (FirebaseAuthException e) {
+            return ResponseEntity.status(403).build(); // Forbidden if token invalid
+        }
     }
         
 

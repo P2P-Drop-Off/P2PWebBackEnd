@@ -12,6 +12,8 @@ public class CreateItemRequest {
     @NotBlank
     private String title;
 
+    private String ownerUid;
+
     private String description;
 
     @NotNull
@@ -27,6 +29,9 @@ public class CreateItemRequest {
     // Getters and Setters
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
+    public String getOwnerUid() { return ownerUid; }
+    public void setOwnerUid(String ownerUid) { this.ownerUid = ownerUid; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

@@ -9,6 +9,7 @@ public class Item {
 
     private String id;
 
+    private String ownerUid;
     private String seller;
     private String name;
     private Timestamp createdAt;
@@ -35,6 +36,14 @@ public class Item {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwnerUid() {
+        return ownerUid;
+    }
+
+    public void setOwnerUid(String ownerUid) {
+        this.ownerUid = ownerUid;
     }
 
     public String getTitle() { return title; }

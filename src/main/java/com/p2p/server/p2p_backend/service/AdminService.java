@@ -5,9 +5,11 @@ import com.p2p.server.p2p_backend.model.Admin;
 import com.p2p.server.p2p_backend.model.User;
 import com.p2p.server.p2p_backend.repository.AdminRepository;
 import com.p2p.server.p2p_backend.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Service
 public class AdminService {
 
     private final AdminRepository repository;
