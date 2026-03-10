@@ -93,7 +93,7 @@ public class P2PConfig implements WebMvcConfigurer {
                         .build()
         );
     }
-
+/*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -105,7 +105,7 @@ public class P2PConfig implements WebMvcConfigurer {
 
         return http.build();
     }
-
+*/
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

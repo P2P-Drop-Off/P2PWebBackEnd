@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 public class GetItemResponse {
 
     private String id;
+    private String ownerUid;
     private String title;
     private String description;
     private BigDecimal price;
@@ -14,6 +15,7 @@ public class GetItemResponse {
 
     public GetItemResponse(Item item) {
         this.id = item.getId();
+        this.ownerUid = item.getOwnerUid();
         this.title = item.getTitle();
         this.description = item.getDescription();
         this.price = item.getPrice();
@@ -23,6 +25,7 @@ public class GetItemResponse {
 
     // Getters
     public String getId() { return id; }
+    public String getOwnerUid() { return ownerUid; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public BigDecimal getPrice() { return price; }

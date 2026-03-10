@@ -7,6 +7,9 @@ import com.p2p.server.p2p_backend.exceptions.ItemNotFoundException;
 import com.p2p.server.p2p_backend.model.Item;
 import com.p2p.server.p2p_backend.repository.FirestoreItemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -30,6 +33,16 @@ public class ItemService {
     } catch (Exception e) {
         throw new RuntimeException("Failed to fetch items", e);
     }
+    }
+
+    public List<GetItemResponse> getAllItemsForUser(String uid) {
+        // fetch all items
+        List<GetItemResponse> allItems = getAllItems();
+
+        // filter to only include items owned by this UID
+        return allItems.stream()
+                .filter(item -> uid.equals(item.getOwnerUid()))
+                .collect(Collectors.toList());
     }
 
     public Item getItem(String id) {
@@ -57,6 +70,10 @@ public class ItemService {
     public CreateItemResponse createItem(CreateItemRequest request) {
         try {
             Item item = new Item();
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String uid = (String) auth.getPrincipal(); 
+            
             item.setTitle(request.getTitle());
             item.setDescription(request.getDescription());
             item.setPrice(request.getPrice());
@@ -65,6 +82,7 @@ public class ItemService {
             item.setViews(0);
             item.setComments(0);
             item.setStatus("active");
+            item.setOwnerUid(uid); 
 
             Item saved = itemRepository.createItem(item);
             return new CreateItemResponse(saved.getId(), saved.getTitle(), saved.getImage());
