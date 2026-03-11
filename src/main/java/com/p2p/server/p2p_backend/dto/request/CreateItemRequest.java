@@ -26,6 +26,8 @@ public class CreateItemRequest {
     @NotBlank
     private String location;
 
+    private String locationId;
+
     // Getters and Setters
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -44,4 +46,7 @@ public class CreateItemRequest {
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
+
+    public String getLocationId() { return locationId; }
+    public void setLocationId(String locationId) { this.locationId = locationId; }
 }

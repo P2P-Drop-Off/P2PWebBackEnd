@@ -44,13 +44,13 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     private GrantedAuthority validateAuthority(String uid, String userType) throws Exception{
         if (userType == null) {
-            return new SimpleGrantedAuthority("USER"); // default to USER 
+            return new SimpleGrantedAuthority("USER"); // user type defaults to USER
         }
         
         if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) != null) ||
                 (userType.equals("USER") && userService.getUser(uid) != null) ||
                 (userType.equals("ADMIN") && adminService.getAdmin(uid) != null)) {
-            return new SimpleGrantedAuthority(userType);
+             return new SimpleGrantedAuthority(userType);
         }else{
             throw new ItemNotFoundException("get 403'd");
         }
@@ -59,10 +59,10 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        
-        if (request.getMethod().equals("OPTIONS") ||
+       if (request.getMethod().equals("OPTIONS") ||
             (request.getMethod().equals("GET") && path.startsWith("/api/items/")) ||
-            (request.getMethod().equals("PUT") && path.contains("/approve"))) {
+            (request.getMethod().equals("PUT") && path.contains("/approve")) ||
+            (request.getMethod().equals("GET") && path.startsWith("/api/stores/"))) { //last one added to make store dashboard public (temp)
             filterChain.doFilter(request, response);
             return;
         }
@@ -75,11 +75,10 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             }
 
             FirebaseToken decoded = firebaseAuth.verifyIdToken(token);
-
             String uid = decoded.getUid();
             String userType = (String) decoded.getClaims().get("userType");
             GrantedAuthority role = validateAuthority(uid, userType);
-
+            
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                 uid,
                 null,

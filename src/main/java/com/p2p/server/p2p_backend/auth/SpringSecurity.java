@@ -20,7 +20,6 @@ public class SpringSecurity {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("filterChain");
         http
                 .cors(cors -> {}) 
                 .csrf(csrf -> csrf.disable())
@@ -31,7 +30,11 @@ public class SpringSecurity {
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/users").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/items/*/approve").permitAll()
+                    .requestMatchers("/api/partner/items/*/dropoff").permitAll() // only this page can call
+                    .requestMatchers("/api/partner/items/*/update-status").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/items/*/status").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/api/items/**").authenticated()
+                    .requestMatchers("/api/stores/**").permitAll()
 
                     // public listing link:
                     .requestMatchers(HttpMethod.GET, "/api/items/*").permitAll()

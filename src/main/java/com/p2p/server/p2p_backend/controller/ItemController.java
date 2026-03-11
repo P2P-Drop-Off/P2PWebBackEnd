@@ -62,6 +62,13 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    // GET items for specific store
+    @GetMapping("/stores/{locationId}/items")
+    public ResponseEntity<List<GetItemResponse>> getItemsForStore(@PathVariable String locationId) {
+        List<GetItemResponse> items = itemService.getItemsForStore(locationId);
+        return ResponseEntity.ok(items);
+    }
+
     // CREATE a new item
     @PostMapping(value = "/items", consumes = "multipart/form-data")
     public ResponseEntity<CreateItemResponse> createItem(
@@ -97,6 +104,19 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    //controller endpoint for seller updating payment status
+    @PutMapping("/items/{id}/status")
+    public ResponseEntity<String> updateItemPaymentStatus(@PathVariable String id,
+                                                         @RequestBody Map<String, String> body) {
+        try {
+            String newStatus = body.get("status");
+            itemService.updateItemStatus(id, newStatus);
+            return ResponseEntity.ok(newStatus);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
     //controller exndpoint for buyer approving transaction
     @PutMapping("/items/{id}/approve")
     public ResponseEntity<CreateItemResponse> approveTransaction(@PathVariable String id) throws Exception {
@@ -104,18 +124,21 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/items/{id}/status")
-    public ResponseEntity<?> updateItemStatus(
-            @PathVariable String id,
-            @RequestBody Map<String, String> statusUpdate
-    ) {
-        String status = statusUpdate.get("status");
-        if (status == null || status.isEmpty()) {
-            return ResponseEntity.badRequest().body("Missing 'status' field");
-        }
-
+    @PutMapping("/partner/items/{itemId}/update-status")
+    public ResponseEntity<String> updateItemStatus(@PathVariable String itemId, @RequestBody Map<String, String> body) {
         try {
-            itemService.updateItemStatus(id, status);
+            String newStatus = body.get("status"); // "dropped_off" or "payment_received" or "picked_up"
+            itemService.updateItemStatus(itemId, newStatus);
+            return ResponseEntity.ok(newStatus);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/partner/items/{id}/dropoff")
+    public ResponseEntity<?> dropOffItem(@PathVariable String id) {
+        try {
+            itemService.updateItemStatus(id, "dropped_off");
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());

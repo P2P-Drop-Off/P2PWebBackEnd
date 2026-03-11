@@ -57,6 +57,54 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    public List<GetItemResponse> getItemsForStore(String locationId) {
+        try {
+            List<Item> items = itemRepository.getAllItems();
+
+            return items.stream()
+                .filter(item ->
+                    locationId.equals(item.getLocationId()) &&
+                    (item.getStatus().equals("approved_by_buyer") ||
+                    item.getStatus().equals("dropped_off") ||
+                    item.getStatus().equals("payment_received") ||
+                    item.getStatus().equals("picked_up"))
+                )
+                .map(GetItemResponse::new)
+                .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch store items", e);
+        }
+    }
+
+    public String advanceItemStatus(String itemId) {
+        try {
+            Item item = itemRepository.getItem(itemId);
+            String currentStatus = item.getStatus();
+
+            switch (currentStatus) {
+                case "approved_by_buyer":
+                    item.setStatus("dropped_off");
+                    break;
+                case "dropped_off":
+                    // awaiting payment confirmation, no change
+                    break;
+                case "payment_received":
+                    item.setStatus("picked_up");
+                    break;
+                case "picked_up":
+                    // already picked up, no change
+                    break;
+                default:
+                    throw new RuntimeException("Cannot advance status from: " + currentStatus);
+            }
+
+            itemRepository.updateItem(item);
+            return item.getStatus();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to advance item status: " + itemId, e);
+        }
+    }
+
     public Item getItem(String id) {
         try {
             Item item = itemRepository.getItem(id);
@@ -91,6 +139,7 @@ public class ItemService {
             item.setPrice(request.getPrice());
             item.setImage(request.getImage());
             item.setLocation(request.getLocation());
+            item.setLocationId(request.getLocationId());
             item.setViews(0);
             item.setComments(0);
             item.setStatus("active");
