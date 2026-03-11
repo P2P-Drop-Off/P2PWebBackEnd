@@ -23,6 +23,16 @@ public class FirestoreItemRepository {
         this.firestore = firestore;
     }
 
+    public boolean sixDigitCodeExists(String code) throws Exception {
+        CollectionReference items = firestore.collection("items");
+
+        Query query = items.whereEqualTo("sixDigitCode", code);
+
+        QuerySnapshot snapshot = query.get().get();
+
+        return !snapshot.isEmpty();
+    }
+
     public List<Item> getAllItems() throws Exception {
 
         List<Item> items = new ArrayList<>();
@@ -95,7 +105,7 @@ public class FirestoreItemRepository {
     }
 
     public void deleteItem(String itemId) throws Exception {
-        firestore.collection(Item.PATH)
+        firestore.collection("items")
                  .document(itemId)
                  .delete().get();
     }

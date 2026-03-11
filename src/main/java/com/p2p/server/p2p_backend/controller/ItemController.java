@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -96,10 +97,36 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    //controller exndpoint for buyer approving transaction
+    @PutMapping("/items/{id}/approve")
+    public ResponseEntity<CreateItemResponse> approveTransaction(@PathVariable String id) throws Exception {
+        itemService.approveTransaction(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/items/{id}/status")
+    public ResponseEntity<?> updateItemStatus(
+            @PathVariable String id,
+            @RequestBody Map<String, String> statusUpdate
+    ) {
+        String status = statusUpdate.get("status");
+        if (status == null || status.isEmpty()) {
+            return ResponseEntity.badRequest().body("Missing 'status' field");
+        }
+
+        try {
+            itemService.updateItemStatus(id, status);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+
     // DELETE an item
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable String id) {
+    public ResponseEntity<?> deleteItem(@PathVariable String id) throws Exception {
         itemService.deleteItem(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("item deleted"); //?
     }
 }

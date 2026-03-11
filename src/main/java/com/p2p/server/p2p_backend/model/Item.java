@@ -10,6 +10,7 @@ public class Item {
     private String id;
 
     private String ownerUid;
+    private String sixDigitCode;
     private String seller;
     private String name;
     private Timestamp createdAt;
@@ -44,6 +45,14 @@ public class Item {
 
     public void setOwnerUid(String ownerUid) {
         this.ownerUid = ownerUid;
+    }
+
+    public String getSixDigitCode() {
+        return sixDigitCode;
+    }
+
+    public void setSixDigitCode(String sixDigitCode) {
+        this.sixDigitCode = sixDigitCode;
     }
 
     public String getTitle() { return title; }

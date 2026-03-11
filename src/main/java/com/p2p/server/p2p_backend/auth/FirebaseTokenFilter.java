@@ -47,7 +47,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             return new SimpleGrantedAuthority("USER"); // default to USER 
         }
         
-        if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) == null) ||
+        if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) != null) ||
                 (userType.equals("USER") && userService.getUser(uid) != null) ||
                 (userType.equals("ADMIN") && adminService.getAdmin(uid) != null)) {
             return new SimpleGrantedAuthority(userType);
@@ -58,7 +58,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (request.getMethod().equals("OPTIONS")) {
+        String path = request.getRequestURI();
+        
+        if (request.getMethod().equals("OPTIONS") ||
+            (request.getMethod().equals("GET") && path.startsWith("/api/items/")) ||
+            (request.getMethod().equals("PUT") && path.contains("/approve"))) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -22,6 +22,18 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
+    private String generateSixDigitCode() throws Exception { // generates a unique 6-digit code for item drop-off and pick-up
+        String code;
+
+        do {
+            int num = (int)(Math.random() * 900000) + 100000;
+            code = String.valueOf(num);
+
+        } while (itemRepository.sixDigitCodeExists(code)); // check Firebase
+
+        return code;
+    }
+
     public List<GetItemResponse> getAllItems() {
     try {
         List<Item> items = itemRepository.getAllItems();
@@ -110,11 +122,47 @@ public class ItemService {
         }
     }
 
-    public void deleteItem(String id) {
+    public void deleteItem(String id) throws Exception {
+        Item item = itemRepository.getItem(id);
+
+        if (!item.getStatus().equals("active")) {
+            throw new RuntimeException("Only active listings can be deleted");
+        }
+        
+        itemRepository.deleteItem(id);
+    }
+
+    public void approveTransaction(String itemId) throws Exception {
+
+        Item item = itemRepository.getItem(itemId);
+
+        if (!item.getStatus().equals("active")) {
+            throw new RuntimeException("Item cannot be approved");
+        }
+
+        String sixDigitCode = generateSixDigitCode();
+
+        item.setStatus("approved_by_buyer");
+        item.setSixDigitCode(sixDigitCode);
+
+        itemRepository.updateItem(item);
+    }
+
+    public void updateItemStatus(String itemId, String status) {
         try {
-            itemRepository.deleteItem(id);
+            // Fetch item using Firestore repo method
+            Item item = itemRepository.getItem(itemId);
+            if (item == null) {
+                throw new RuntimeException("Item not found");
+            }
+
+            // Update status
+            item.setStatus(status);
+
+            // Persist the change using Firestore repo
+            itemRepository.updateItem(item);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete item: " + id, e);
+            throw new RuntimeException("Failed to update item status for item: " + itemId, e);
         }
     }
 }
