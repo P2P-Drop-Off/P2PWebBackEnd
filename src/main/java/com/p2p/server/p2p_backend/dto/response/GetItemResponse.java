@@ -12,6 +12,7 @@ public class GetItemResponse {
     private BigDecimal price;
     private String image;
     private String location;
+    private String locationId;
     private String status;
     private String sixDigitCode;
 
@@ -23,6 +24,7 @@ public class GetItemResponse {
         this.price = item.getPrice();
         this.image = item.getImage();
         this.location = item.getLocation();
+        this.locationId = item.getLocationId();
         this.status = item.getStatus();
         this.sixDigitCode = item.getSixDigitCode();
     }
@@ -35,6 +37,7 @@ public class GetItemResponse {
     public BigDecimal getPrice() { return price; }
     public String getImage() { return image; }
     public String getLocation() { return location; }
+    public String getLocationId() { return locationId; }
     public String getStatus() { return status; }
     public String getSixDigitCode() { return sixDigitCode; }
 }
