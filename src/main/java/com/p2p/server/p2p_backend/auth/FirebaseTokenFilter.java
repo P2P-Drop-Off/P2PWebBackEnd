@@ -47,7 +47,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             return new SimpleGrantedAuthority("USER"); // default to USER 
         }
         
-        if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) == null) ||
+        if ((userType.equals("STORE_USER") && storeUserService.getStoreUser(uid) != null) ||
                 (userType.equals("USER") && userService.getUser(uid) != null) ||
                 (userType.equals("ADMIN") && adminService.getAdmin(uid) != null)) {
             return new SimpleGrantedAuthority(userType);
