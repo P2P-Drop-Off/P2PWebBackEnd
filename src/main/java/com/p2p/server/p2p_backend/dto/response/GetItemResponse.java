@@ -2,6 +2,7 @@ package com.p2p.server.p2p_backend.dto.response;
 
 import com.p2p.server.p2p_backend.model.Item;
 import java.math.BigDecimal;
+import com.google.cloud.Timestamp;
 
 public class GetItemResponse {
 
@@ -14,6 +15,7 @@ public class GetItemResponse {
     private String location;
     private String locationId;
     private String status;
+    private Timestamp createdAt;
     private String sixDigitCode;
 
     public GetItemResponse(Item item) {
@@ -26,6 +28,7 @@ public class GetItemResponse {
         this.location = item.getLocation();
         this.locationId = item.getLocationId();
         this.status = item.getStatus();
+        this.createdAt = item.getCreatedAt();
         this.sixDigitCode = item.getSixDigitCode();
     }
 
@@ -39,5 +42,6 @@ public class GetItemResponse {
     public String getLocation() { return location; }
     public String getLocationId() { return locationId; }
     public String getStatus() { return status; }
+    public Timestamp getCreatedAt() { return createdAt; }
     public String getSixDigitCode() { return sixDigitCode; }
 }

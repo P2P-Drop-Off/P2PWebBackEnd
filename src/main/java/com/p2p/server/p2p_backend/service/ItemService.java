@@ -9,6 +9,7 @@ import com.p2p.server.p2p_backend.repository.FirestoreItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import com.google.cloud.Timestamp;
 import java.util.stream.Collectors;
 
 import java.util.List;
@@ -143,6 +144,7 @@ public class ItemService {
             item.setViews(0);
             item.setComments(0);
             item.setStatus("active");
+            item.setCreatedAt(Timestamp.now());
             item.setOwnerUid(uid); 
 
             Item saved = itemRepository.createItem(item);
